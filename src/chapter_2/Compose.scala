@@ -1,4 +1,13 @@
-package exercise_5
+package chapter_2
+
+/*
+Exercise 2.5
+
+Implement the higher-order function that composes two functions.
+
+def compose[A,B,C](f: B => C, g: A => B): A => C
+ */
+
 /**
  * Found this link helpful
  * https://twitter.github.io/scala_school/pattern-matching-and-functional-composition.html#composition
