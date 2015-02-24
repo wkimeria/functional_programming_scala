@@ -35,6 +35,10 @@ object List {
   Exercise 3.3
   Using the same idea, implement the function setHead for replacing the first element of a List with a different value.
   */
+  def setHead[A](lst: List[A], i: A):List[A] = lst match {
+    case Nil => lst
+    case Cons(h, t) => Cons(i, t)
+  }
 
   /*
   Exercise 3.4
