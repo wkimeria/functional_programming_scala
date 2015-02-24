@@ -26,6 +26,10 @@ object List {
   Note that the function takes constant time. What are different choices you could make in your implementation if
   the List is Nil?
   */
+  def tail[A](lst: List[A]):List[A] = lst match {
+    case Nil => lst
+    case Cons(h, t) => t
+  }
 
   /*
   Exercise 3.3
