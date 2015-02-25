@@ -1,10 +1,19 @@
-package chapter_3.tail
+package chapter_3
 
 sealed trait List[+a]
 case object Nil extends List[Nothing]
 case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
+object Tester {
+  def main(args: Array[String]): Unit = {
+    val lst = List(1,2,3,4,5,6,7,8,9,10)
+    println(lst)
+    println(List.drop(lst,4))
+  }
+}
+
 object List {
+
   def sum(ints: List[Int]): Int = ints match {
     case Nil => 0
     case Cons(x, xs) => x + sum(xs)
@@ -47,6 +56,17 @@ object List {
 
   def drop[A](l: List[A], n: Int): List[A]
    */
+  def drop[A](l: List[A], n: Int): List[A] = {
+    def dropOne(lst: List[A], counter: Int): List[A] = {
+      if (counter == n)
+        lst
+      else{
+        val dropped = tail(lst)
+        dropOne(dropped, counter + 1)
+      }
+    }
+    dropOne(l, 0)
+  }
 
   /*
   Exercise 3.5
