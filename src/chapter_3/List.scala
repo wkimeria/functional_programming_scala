@@ -1,14 +1,24 @@
 package chapter_3
 
+import scala.annotation.tailrec
+
 sealed trait List[+a]
+
 case object Nil extends List[Nothing]
+
 case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
 object Tester {
   def main(args: Array[String]): Unit = {
-    val lst = List(1,2,3,4,5,6,7,8,9,10)
-    println(lst)
-    println(List.drop(lst,4))
+    assert(List.sum(List(1, 2, 3)) == 6)
+    assert(List.product(List(1, 2, 3, 4)) == 24)
+    assert(List.setHead(List(1, 2, 3), 9) == Cons(9, Cons(2, Cons(3, Nil))))
+    assert(List.drop(List(1, 2, 3, 4), 2) == Cons(3, Cons(4, Nil)))
+    def even(v: Int): Boolean = {
+      v % 2 == 0
+    }
+    assert(List.dropWhile(Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))), even) == Cons(1, Cons(3, Cons(5, Nil))))
+
   }
 }
 
@@ -26,8 +36,8 @@ object List {
   }
 
   def apply[A](as: A*): List[A] =
-  if(as.isEmpty) Nil
-  else Cons(as.head, apply(as.tail: _*))
+    if (as.isEmpty) Nil
+    else Cons(as.head, apply(as.tail: _*))
 
   /*
   Exercise 3.2
@@ -35,7 +45,7 @@ object List {
   Note that the function takes constant time. What are different choices you could make in your implementation if
   the List is Nil?
   */
-  def tail[A](lst: List[A]):List[A] = lst match {
+  def tail[A](lst: List[A]): List[A] = lst match {
     case Nil => lst
     case Cons(h, t) => t
   }
@@ -44,7 +54,7 @@ object List {
   Exercise 3.3
   Using the same idea, implement the function setHead for replacing the first element of a List with a different value.
   */
-  def setHead[A](lst: List[A], i: A):List[A] = lst match {
+  def setHead[A](lst: List[A], i: A): List[A] = lst match {
     case Nil => lst
     case Cons(h, t) => Cons(i, t)
   }
@@ -57,15 +67,16 @@ object List {
   def drop[A](l: List[A], n: Int): List[A]
    */
   def drop[A](l: List[A], n: Int): List[A] = {
-    def dropOne(lst: List[A], counter: Int): List[A] = {
+    @tailrec
+    def loop(lst: List[A], counter: Int): List[A] = {
       if (counter == n)
         lst
-      else{
+      else {
         val dropped = tail(lst)
-        dropOne(dropped, counter + 1)
+        loop(dropped, counter + 1)
       }
     }
-    dropOne(l, 0)
+    loop(l, 0)
   }
 
   /*
@@ -74,6 +85,22 @@ object List {
 
   def dropWhile[A](l: List[A], f: A => Boolean): List[A]
    */
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = {
+
+    //TODO: Is there a way of writing this in a Tail Recursive way? @tailrec
+    def loop(lst: List[A]): List[A] = {
+      lst match {
+        case Nil => lst
+        case Cons(h, t) => {
+          if (f(h) == true)
+            loop(t)
+          else
+            Cons(h, loop(t))
+        }
+      }
+    }
+    loop(l)
+  }
 
   /*
   Exercise 3.6
