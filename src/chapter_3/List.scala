@@ -18,7 +18,7 @@ object Tester {
       v % 2 == 0
     }
     assert(List.dropWhile(Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))), even) == Cons(1, Cons(3, Cons(5, Nil))))
-
+    assert( List.init(List(1, 2, 3, 4, 5)) == Cons(1,Cons(2,Cons(3,Cons(4,Nil)))))
   }
 }
 
@@ -109,6 +109,38 @@ object List {
   Why can’t this function be implemented in constant time like tail?
 
   def init[A](l: List[A]): List[A]
+   */
+  def init[A](l: List[A]): List[A] = {
+
+    @annotation.tailrec
+    def loop(lst: List[A], acc: List[A]): List[A] = {
+      lst match {
+        case Cons(x, Nil) => acc
+        case Cons(y, z) => loop(z, Cons(y, acc))
+      }
+    }
+    @annotation.tailrec
+    def reverse(lst: List[A], acc: List[A]): List[A] = {
+      lst match {
+        case Cons(x, Nil) => Cons(x, acc)
+        case Cons(y, z) => reverse(z, Cons(y, acc))
+      }
+    }
+    reverse((loop(l, List())), List())
+  }
+
+  /*
+  Exercise 3.7
+  Can product, implemented using foldRight, immediately halt the recursion and return 0.0 if it encounters a 0.0?
+  Why or why not? Consider how any short-circuiting might work if you call foldRight with a large list.
+  This is a deeper question that we’ll return to in chapter 5.
+   */
+
+  /*
+  Exercise 3.8
+  See what happens when you pass Nil and Cons themselves to foldRight, like this:
+  foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_)).[10]
+  What do you think this says about the relationship between foldRight and the data constructors of List?
    */
 
 }
