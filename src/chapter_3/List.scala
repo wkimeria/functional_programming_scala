@@ -12,17 +12,32 @@ object Tester {
   def main(args: Array[String]): Unit = {
     assert(List.sum(List(1, 2, 3)) == 6)
     assert(List.product(List(1, 2, 3, 4)) == 24)
+    assert(List.sum2(List(1, 2, 3)) == 6)
+    assert(List.product2(List(1, 2, 3, 4)) == 24)
     assert(List.setHead(List(1, 2, 3), 9) == Cons(9, Cons(2, Cons(3, Nil))))
     assert(List.drop(List(1, 2, 3, 4), 2) == Cons(3, Cons(4, Nil)))
     def even(v: Int): Boolean = {
       v % 2 == 0
     }
     assert(List.dropWhile(Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))), even) == Cons(1, Cons(3, Cons(5, Nil))))
-    assert( List.init(List(1, 2, 3, 4, 5)) == Cons(1,Cons(2,Cons(3,Cons(4,Nil)))))
+    assert(List.init(List(1, 2, 3, 4, 5)) == Cons(1, Cons(2, Cons(3, Cons(4, Nil)))))
+    assert(List.length(List(1, 2, 3, 4, 5)) == 5)
   }
 }
 
 object List {
+
+  def foldRight[A,B](as: List[A], z: B)(f:(A, B) => B): B =
+    as match {
+      case Nil => z
+      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    }
+
+  def sum2(ns: List[Int]) =
+    foldRight(ns, 0)((x,y) => x + y)
+
+  def product2(ns: List[Int]) =
+    foldRight(ns, 1.0)(_ *_)
 
   def sum(ints: List[Int]): Int = ints match {
     case Nil => 0
@@ -88,6 +103,7 @@ object List {
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] = {
 
     //TODO: Is there a way of writing this in a Tail Recursive way? @tailrec
+    //TODO: Revisit, there is a better way of doing this.
     def loop(lst: List[A]): List[A] = {
       lst match {
         case Nil => lst
@@ -130,17 +146,41 @@ object List {
   }
 
   /*
-  Exercise 3.7
+  Exercise 3.7 (No code, just reasoning through the problem)
   Can product, implemented using foldRight, immediately halt the recursion and return 0.0 if it encounters a 0.0?
   Why or why not? Consider how any short-circuiting might work if you call foldRight with a large list.
   This is a deeper question that we’ll return to in chapter 5.
    */
 
   /*
-  Exercise 3.8
+  Exercise 3.8 (No code, just reasoning through the problem)
   See what happens when you pass Nil and Cons themselves to foldRight, like this:
   foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_)).[10]
   What do you think this says about the relationship between foldRight and the data constructors of List?
+   */
+
+  /*
+  Exercise 3.9
+  Compute the length of a list using foldRight.
+  def length[A](as: List[A]): Int
+   */
+  def length[A](as: List[A]): Int = {
+    foldRight(as, 0)((x, y) => 1 + y)
+  }
+
+
+  /*
+  Exercise 3.10
+  Our implementation of foldRight is not tail-recursive and will result in a StackOverflowError for large lists
+  (we say it’s not stack-safe).
+  Convince yourself that this is the case, and then write another general list-recursion function, foldLeft,
+  that is tail-recursive,using the techniques we discussed in the previous chapter. Here is its signature:
+
+  def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B
+
+  [note]
+  Again, foldLeft is defined as a method of List in the Scala standard library, and it is curried similarly
+  for better type inference, so you can write mylist.foldLeft(0.0)(_ + _).
    */
 
 }
