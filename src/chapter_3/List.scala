@@ -22,6 +22,7 @@ object Tester {
     assert(List.dropWhile(Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))), even) == Cons(1, Cons(3, Cons(5, Nil))))
     assert(List.init(List(1, 2, 3, 4, 5)) == Cons(1, Cons(2, Cons(3, Cons(4, Nil)))))
     assert(List.length(List(1, 2, 3, 4, 5)) == 5)
+    assert(List.sum3(List(1, 2, 3)) == 6)
   }
 }
 
@@ -32,6 +33,9 @@ object List {
       case Nil => z
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
     }
+
+  def sum3(ns: List[Int]) =
+    foldLeft(ns, 0)((x,y) => x + y)
 
   def sum2(ns: List[Int]) =
     foldRight(ns, 0)((x,y) => x + y)
@@ -168,7 +172,6 @@ object List {
     foldRight(as, 0)((x, y) => 1 + y)
   }
 
-
   /*
   Exercise 3.10
   Our implementation of foldRight is not tail-recursive and will result in a StackOverflowError for large lists
@@ -181,6 +184,32 @@ object List {
   [note]
   Again, foldLeft is defined as a method of List in the Scala standard library, and it is curried similarly
   for better type inference, so you can write mylist.foldLeft(0.0)(_ + _).
+   */
+
+  @tailrec
+  def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B = {
+    as match {
+      case Nil => z
+      case Cons(x, xs) => foldLeft(xs, f(z,x))(f)
+    }
+  }
+
+  /*
+  Exercise 3.11
+  Write sum, product, and a function to compute the length of a list using foldLeft.
+   */
+
+  /*
+  Exercise 3.12
+  Write a function that returns the reverse of a list (given List(1,2,3) it returns List(3,2,1)).
+  See if you can write it using a fold.
+   */
+
+  /*
+  Exercise 3.13
+  Hard: Can you write foldLeft in terms of foldRight? How about the other way around? Implementing foldRight via
+  foldLeft is useful because it lets us implement foldRight tail-recursively, which means it works even for large
+  lists without overflowing the stack.
    */
 
 }
