@@ -9,23 +9,19 @@ Your definition should use a local tail-recursive function. def fib(n: Int): 
 
 object FibTest {
   def main(args: Array[String]): Unit = {
-    println(fib(5))
+    println(fib(6))
   }
 
   /* Get the nth Fibonacci number */
-  def fib(pos: Int): Int = {
+  def fib(pos: BigInt): BigInt = {
     @annotation.tailrec
-    var counter = 2
-    def go(left: Int, right: Int, pos: Int): Int = {
-      if (pos == 0) 0
-      if (pos == 1) 1
-      val res = left + right
-      if (counter == pos) res
+    def loop(left: BigInt, right: BigInt, pos: BigInt, counter: BigInt): BigInt = {
+      if (pos < 2) 0
+      if (counter == pos) left + right
       else {
-        counter = counter + 1
-        go(right, (left + right), pos)
+        loop(right, (left + right), pos, counter + 1)
       }
     }
-    go(0, 1, pos)
+    loop(0, 1, pos, 2)
   }
 }
