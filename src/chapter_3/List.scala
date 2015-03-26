@@ -25,6 +25,8 @@ object Tester {
     assert(List.sumLeft(List(1, 2, 3)) == 6)
     assert(List.productLeft(List(1, 2, 3, 4)) == 24)
     assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
+    assert(List.reverse(List(2, 4, 6, 8)) == Cons(8,Cons(6,Cons(4,Cons(2,Nil)))))
+
   }
 }
 
@@ -154,6 +156,7 @@ object List {
   Why or why not? Consider how any short-circuiting might work if you call foldRight with a large list.
   This is a deeper question that we’ll return to in chapter 5.
    */
+  //TODO:Write code here
 
   /*
   Exercise 3.8 (No code, just reasoning through the problem)
@@ -161,6 +164,7 @@ object List {
   foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_)).[10]
   What do you think this says about the relationship between foldRight and the data constructors of List?
    */
+  //TODO: Write code here
 
   /*
   Exercise 3.9
@@ -203,7 +207,7 @@ object List {
   def sumLeft(ns: List[Int]) =
     foldLeft(ns, 0)((x,y) => x + y)
 
-  def lengthLeft(ns: List[Int]) =
+  def lengthLeft[A](ns: List[A]) =
     foldLeft(ns, 0)((x,y) => x + 1)
 
   /*
@@ -211,6 +215,9 @@ object List {
   Write a function that returns the reverse of a list (given List(1,2,3) it returns List(3,2,1)).
   See if you can write it using a fold.
    */
+  //Trick is realizing second input argument can be List of type x
+  def reverse[A](ns: List[A]): List[A] = foldLeft(ns, List[A]())((lst,ns) => Cons(ns,lst))
+
 
   /*
   Exercise 3.13
