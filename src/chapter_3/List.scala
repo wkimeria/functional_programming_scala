@@ -13,7 +13,7 @@ object Tester {
     assert(List.sum(List(1, 2, 3)) == 6)
     assert(List.product(List(1, 2, 3, 4)) == 24)
     assert(List.sum2(List(1, 2, 3)) == 6)
-    assert(List.product2(List(1, 2, 3, 4)) == 24)
+    assert(List.productRight(List(1, 2, 3, 4)) == 24)
     assert(List.setHead(List(1, 2, 3), 9) == Cons(9, Cons(2, Cons(3, Nil))))
     assert(List.drop(List(1, 2, 3, 4), 2) == Cons(3, Cons(4, Nil)))
     def even(v: Int): Boolean = {
@@ -22,7 +22,9 @@ object Tester {
     assert(List.dropWhile(Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))), even) == Cons(1, Cons(3, Cons(5, Nil))))
     assert(List.init(List(1, 2, 3, 4, 5)) == Cons(1, Cons(2, Cons(3, Cons(4, Nil)))))
     assert(List.length(List(1, 2, 3, 4, 5)) == 5)
-    assert(List.sum3(List(1, 2, 3)) == 6)
+    assert(List.sumLeft(List(1, 2, 3)) == 6)
+    assert(List.productLeft(List(1, 2, 3, 4)) == 24)
+    assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
   }
 }
 
@@ -34,13 +36,10 @@ object List {
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
     }
 
-  def sum3(ns: List[Int]) =
-    foldLeft(ns, 0)((x,y) => x + y)
-
   def sum2(ns: List[Int]) =
     foldRight(ns, 0)((x,y) => x + y)
 
-  def product2(ns: List[Int]) =
+  def productRight(ns: List[Int]) =
     foldRight(ns, 1.0)(_ *_)
 
   def sum(ints: List[Int]): Int = ints match {
@@ -198,6 +197,14 @@ object List {
   Exercise 3.11
   Write sum, product, and a function to compute the length of a list using foldLeft.
    */
+  def productLeft(ns: List[Double]): Double =
+    foldLeft(ns, 1.0)((x,y) => x * y)
+
+  def sumLeft(ns: List[Int]) =
+    foldLeft(ns, 0)((x,y) => x + y)
+
+  def lengthLeft(ns: List[Int]) =
+    foldLeft(ns, 0)((x,y) => x + 1)
 
   /*
   Exercise 3.12
