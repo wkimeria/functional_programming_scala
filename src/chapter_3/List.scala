@@ -25,24 +25,24 @@ object Tester {
     assert(List.sumLeft(List(1, 2, 3)) == 6)
     assert(List.productLeft(List(1, 2, 3, 4)) == 24)
     assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
-    assert(List.reverse(List(2, 4, 6, 8)) == Cons(8,Cons(6,Cons(4,Cons(2,Nil)))))
+    assert(List.reverse(List(2, 4, 6, 8)) == Cons(8, Cons(6, Cons(4, Cons(2, Nil)))))
 
   }
 }
 
 object List {
 
-  def foldRight[A,B](as: List[A], z: B)(f:(A, B) => B): B =
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B =
     as match {
       case Nil => z
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
     }
 
   def sum2(ns: List[Int]) =
-    foldRight(ns, 0)((x,y) => x + y)
+    foldRight(ns, 0)((x, y) => x + y)
 
   def productRight(ns: List[Int]) =
-    foldRight(ns, 1.0)(_ *_)
+    foldRight(ns, 1.0)(_ * _)
 
   def sum(ints: List[Int]): Int = ints match {
     case Nil => 0
@@ -190,10 +190,10 @@ object List {
    */
 
   @tailrec
-  def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B = {
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = {
     as match {
       case Nil => z
-      case Cons(x, xs) => foldLeft(xs, f(z,x))(f)
+      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
     }
   }
 
@@ -202,13 +202,13 @@ object List {
   Write sum, product, and a function to compute the length of a list using foldLeft.
    */
   def productLeft(ns: List[Double]): Double =
-    foldLeft(ns, 1.0)((x,y) => x * y)
+    foldLeft(ns, 1.0)((x, y) => x * y)
 
   def sumLeft(ns: List[Int]) =
-    foldLeft(ns, 0)((x,y) => x + y)
+    foldLeft(ns, 0)((x, y) => x + y)
 
   def lengthLeft[A](ns: List[A]) =
-    foldLeft(ns, 0)((x,y) => x + 1)
+    foldLeft(ns, 0)((x, y) => x + 1)
 
   /*
   Exercise 3.12
@@ -216,7 +216,7 @@ object List {
   See if you can write it using a fold.
    */
   //Trick is realizing second input argument can be List of type x
-  def reverse[A](ns: List[A]): List[A] = foldLeft(ns, List[A]())((lst,ns) => Cons(ns,lst))
+  def reverse[A](ns: List[A]): List[A] = foldLeft(ns, List[A]())((lst, ns) => Cons(ns, lst))
 
 
   /*
@@ -225,5 +225,122 @@ object List {
   foldLeft is useful because it lets us implement foldRight tail-recursively, which means it works even for large
   lists without overflowing the stack.
    */
+
+  /*Exercise 3.14
+
+  Implement append in terms of either foldLeft or foldRight.
+  */
+
+  /*
+  Exercise 3.15
+
+  Hard: Write a function that concatenates a list of lists into a single list. Its runtime should be linear in the total length of all lists. Try to use functions we have already defined.
+  */
+
+  /*
+  Exercise 3.16
+
+  Write a function that transforms a list of integers by adding 1 to each element. (Reminder: this should be a pure function that returns a new List!)
+  */
+
+  /*
+  Exercise 3.17
+
+  Write a function that turns each value in a List[Double] into a String. You can use the expression d.toString to convert some d: Double to a String.
+  */
+
+  /*
+  Exercise 3.18
+
+  Write a function map that generalizes modifying each element in a list while maintaining the structure of the list. Here is its signature:[12]
+
+  [Note] In the standard library, map and flatMap are methods of List.
+
+  def map[A,B](as: List[A])(f: A => B): List[B]
+  */
+
+  /*
+  Exercise 3.19
+
+  Write a function filter that removes elements from a list unless they satisfy a given predicate. Use it to remove all odd numbers from a List[Int].
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A]
+  */
+
+  /*
+  Exercise 3.20
+
+  Write a function flatMap that works like map except that the function given will return a list instead of a single result, and that list should be inserted into the final resulting list.
+  Here is its signature:
+
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B]
+
+  For instance, flatMap(List(1,2,3))(i => List(i,i)) should result in List(1,1,2,2,3,3).
+  */
+
+  /*
+  Exercise 3.21
+
+  Use flatMap to implement filter.
+  */
+
+  /*
+  Exercise 3.22
+
+  Write a function that accepts two lists and constructs a new list by adding corresponding elements. For example, List(1,2,3) and List(4,5,6) become List(5,7,9).
+  */
+
+  /*
+  Exercise 3.23
+
+  Generalize the function you just wrote so that it’s not specific to integers or addition. Name your generalized function zipWith.
+  */
+
+  /*
+  Exercise 3.24
+
+  Hard: As an example, implement hasSubsequence for checking whether a List contains another List as a subsequence.
+  For instance, List(1,2,3,4) would have List(1,2), List(2,3), and List(4) as subsequences, among others.
+  You may have some difficulty finding a concise purely functional implementation that is also efficient. That’s okay.
+  Implement the function however comes most naturally.
+  We’ll return to this implementation in chapter 5 and hopefully improve on it.
+  Note: Any two values x and y can be compared for equality in Scala using the expression x == y.
+
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean
+  */
+
+  /*
+  Exercise 3.25
+
+  Write a function size that counts the number of nodes (leaves and branches) in a tree.
+
+  */
+
+  /*
+  Exercise 3.26
+
+  Write a function maximum that returns the maximum element in a Tree[Int].
+  (Note: In Scala, you can use x.max(y) or x max y to compute the maximum of two integers x and y.)
+  */
+
+  /*
+  Exercise 3.27
+
+  Write a function depth that returns the maximum path length from the root of a tree to any leaf.
+  */
+
+  /*
+  Exercise 3.28
+
+  Write a function map, analogous to the method of the same name on List, that modifies each element in a tree with a given function.
+  */
+
+  /*
+  Exercise 3.29
+
+  Generalize size, maximum, depth, and map, writing a new function fold that abstracts over their similarities. Reimplement them in terms of this more general function.
+  Can you draw an analogy between this fold function and the left and right folds for List?
+  */
+
 
 }
