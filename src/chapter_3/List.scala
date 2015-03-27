@@ -27,7 +27,10 @@ object Tester {
     assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
     assert(List.reverse(List(2, 4, 6, 8)) == Cons(8, Cons(6, Cons(4, Cons(2, Nil)))))
     assert(List.appendRight(List(1, 2, 3), List(4, 5)) == Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil))))))
-    //assert(List.appendRight(List(1,2), List(1,2)) == Cons(1, Cons(2, Cons(3, Cons(4, Nil)))))
+    assert(List.addOne(List(2,4,6,8)) == Cons(3,Cons(5,Cons(7,Cons(9,Nil)))))
+    assert(List.doubleToString(List(1,2,3,4,5)) == Cons("1",Cons("2",Cons("3",Cons("4",Cons("5",Nil))))))
+    //List.map(List(1,2,3)((x: Int) => x))
+    //val f = (x: Int) => x + 1
 
   }
 }
@@ -228,7 +231,8 @@ object List {
   lists without overflowing the stack.
    */
 
-  /*Exercise 3.14
+  /*
+  Exercise 3.14
 
   Implement append in terms of either foldLeft or foldRight.
   */
@@ -248,6 +252,7 @@ object List {
   Write a function that transforms a list of integers by adding 1 to each element.
   (Reminder: this should be a pure function that returns a new List!)
   */
+  def addOne(lst: List[Int]):List[Int] = foldRight(lst, List[Int]())((x, y) => Cons(x + 1, y))
 
   /*
   Exercise 3.17
@@ -255,6 +260,7 @@ object List {
   Write a function that turns each value in a List[Double] into a String.
   You can use the expression d.toString to convert some d: Double to a String.
   */
+  def doubleToString(lst: List[Int]):List[String] = foldRight(lst, List[String]())((x, y) => Cons(x.toString, y))
 
   /*
   Exercise 3.18
@@ -266,6 +272,10 @@ object List {
 
   def map[A,B](as: List[A])(f: A => B): List[B]
   */
+  def map[A,B](as: List[A])(f: A => B): List[B] = {
+    //TODO
+    List[B]()
+  }
 
   /*
   Exercise 3.19
