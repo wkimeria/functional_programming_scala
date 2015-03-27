@@ -26,11 +26,11 @@ object Tester {
     assert(List.productLeft(List(1, 2, 3, 4)) == 24)
     assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
     assert(List.reverse(List(2, 4, 6, 8)) == Cons(8, Cons(6, Cons(4, Cons(2, Nil)))))
-    assert(List.appendRight(List(1, 2, 3), List(4, 5)) == Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil))))))
-    assert(List.addOne(List(2,4,6,8)) == Cons(3,Cons(5,Cons(7,Cons(9,Nil)))))
-    assert(List.doubleToString(List(1,2,3,4,5)) == Cons("1",Cons("2",Cons("3",Cons("4",Cons("5",Nil))))))
-    //List.map(List(1,2,3)((x: Int) => x))
-    //val f = (x: Int) => x + 1
+    assert(List.appendRight(List(1, 2, 3), List(4, 5)) == Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))))
+    assert(List.addOne(List(2, 4, 6, 8)) == Cons(3, Cons(5, Cons(7, Cons(9, Nil)))))
+    assert(List.doubleToString(List(1, 2, 3, 4, 5)) == Cons("1", Cons("2", Cons("3", Cons("4", Cons("5", Nil))))))
+    assert(List.map(List(1, 2, 3))((x) => x * x) == Cons(1, Cons(4, Cons(9, Nil))))
+    assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(2, Cons(4, Cons(6, Nil))))
 
   }
 }
@@ -236,7 +236,7 @@ object List {
 
   Implement append in terms of either foldLeft or foldRight.
   */
-  def appendRight[A](ns1: List[A], ns2: List[A]): List[A] = foldRight(ns1, ns2)((lst2, lst1) => Cons(lst2,lst1))
+  def appendRight[A](ns1: List[A], ns2: List[A]): List[A] = foldRight(ns1, ns2)((lst2, lst1) => Cons(lst2, lst1))
 
   /*
   Exercise 3.15
@@ -252,7 +252,7 @@ object List {
   Write a function that transforms a list of integers by adding 1 to each element.
   (Reminder: this should be a pure function that returns a new List!)
   */
-  def addOne(lst: List[Int]):List[Int] = foldRight(lst, List[Int]())((x, y) => Cons(x + 1, y))
+  def addOne(lst: List[Int]): List[Int] = foldRight(lst, List[Int]())((x, y) => Cons(x + 1, y))
 
   /*
   Exercise 3.17
@@ -260,7 +260,7 @@ object List {
   Write a function that turns each value in a List[Double] into a String.
   You can use the expression d.toString to convert some d: Double to a String.
   */
-  def doubleToString(lst: List[Int]):List[String] = foldRight(lst, List[String]())((x, y) => Cons(x.toString, y))
+  def doubleToString(lst: List[Int]): List[String] = foldRight(lst, List[String]())((x, y) => Cons(x.toString, y))
 
   /*
   Exercise 3.18
@@ -272,10 +272,7 @@ object List {
 
   def map[A,B](as: List[A])(f: A => B): List[B]
   */
-  def map[A,B](as: List[A])(f: A => B): List[B] = {
-    //TODO
-    List[B]()
-  }
+  def map[A, B](as: List[A])(f: A => B): List[B] = foldRight(as, List[B]())((x, y) => Cons(f(x), y))
 
   /*
   Exercise 3.19
@@ -285,7 +282,14 @@ object List {
 
   def filter[A](as: List[A])(f: A => Boolean): List[A]
   */
-
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, List[A]())((x, y) => {
+      f(x) match {
+        case true => y
+        case false => Cons(x, y)
+      }
+    })
+  
   /*
   Exercise 3.20
 
