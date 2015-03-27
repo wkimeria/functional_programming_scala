@@ -26,6 +26,8 @@ object Tester {
     assert(List.productLeft(List(1, 2, 3, 4)) == 24)
     assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
     assert(List.reverse(List(2, 4, 6, 8)) == Cons(8, Cons(6, Cons(4, Cons(2, Nil)))))
+    assert(List.appendRight(List(1, 2, 3), List(4, 5)) == Cons(1,Cons(2,Cons(3,Cons(4,Cons(5,Nil))))))
+    //assert(List.appendRight(List(1,2), List(1,2)) == Cons(1, Cons(2, Cons(3, Cons(4, Nil)))))
 
   }
 }
@@ -230,29 +232,35 @@ object List {
 
   Implement append in terms of either foldLeft or foldRight.
   */
+  def appendRight[A](ns1: List[A], ns2: List[A]): List[A] = foldRight(ns1, ns2)((lst2, lst1) => Cons(lst2,lst1))
 
   /*
   Exercise 3.15
 
-  Hard: Write a function that concatenates a list of lists into a single list. Its runtime should be linear in the total length of all lists. Try to use functions we have already defined.
+  Hard: Write a function that concatenates a list of lists into a single list.
+  Its runtime should be linear in the total length of all lists.
+  Try to use functions we have already defined.
   */
 
   /*
   Exercise 3.16
 
-  Write a function that transforms a list of integers by adding 1 to each element. (Reminder: this should be a pure function that returns a new List!)
+  Write a function that transforms a list of integers by adding 1 to each element.
+  (Reminder: this should be a pure function that returns a new List!)
   */
 
   /*
   Exercise 3.17
 
-  Write a function that turns each value in a List[Double] into a String. You can use the expression d.toString to convert some d: Double to a String.
+  Write a function that turns each value in a List[Double] into a String.
+  You can use the expression d.toString to convert some d: Double to a String.
   */
 
   /*
   Exercise 3.18
 
-  Write a function map that generalizes modifying each element in a list while maintaining the structure of the list. Here is its signature:[12]
+  Write a function map that generalizes modifying each element in a list while maintaining the structure of the list.
+  Here is its signature:[12]
 
   [Note] In the standard library, map and flatMap are methods of List.
 
@@ -262,7 +270,8 @@ object List {
   /*
   Exercise 3.19
 
-  Write a function filter that removes elements from a list unless they satisfy a given predicate. Use it to remove all odd numbers from a List[Int].
+  Write a function filter that removes elements from a list unless they satisfy a given predicate.
+  Use it to remove all odd numbers from a List[Int].
 
   def filter[A](as: List[A])(f: A => Boolean): List[A]
   */
@@ -270,7 +279,8 @@ object List {
   /*
   Exercise 3.20
 
-  Write a function flatMap that works like map except that the function given will return a list instead of a single result, and that list should be inserted into the final resulting list.
+  Write a function flatMap that works like map except that the function given will return a list instead of a single
+  result, and that list should be inserted into the final resulting list.
   Here is its signature:
 
   def flatMap[A,B](as: List[A])(f: A => List[B]): List[B]
@@ -287,13 +297,15 @@ object List {
   /*
   Exercise 3.22
 
-  Write a function that accepts two lists and constructs a new list by adding corresponding elements. For example, List(1,2,3) and List(4,5,6) become List(5,7,9).
+  Write a function that accepts two lists and constructs a new list by adding corresponding elements. For example,
+  List(1,2,3) and List(4,5,6) become List(5,7,9).
   */
 
   /*
   Exercise 3.23
 
-  Generalize the function you just wrote so that it’s not specific to integers or addition. Name your generalized function zipWith.
+  Generalize the function you just wrote so that it’s not specific to integers or addition.
+  Name your generalized function zipWith.
   */
 
   /*
@@ -338,7 +350,8 @@ object List {
   /*
   Exercise 3.29
 
-  Generalize size, maximum, depth, and map, writing a new function fold that abstracts over their similarities. Reimplement them in terms of this more general function.
+  Generalize size, maximum, depth, and map, writing a new function fold that abstracts over their similarities.
+  Reimplement them in terms of this more general function.
   Can you draw an analogy between this fold function and the left and right folds for List?
   */
 
