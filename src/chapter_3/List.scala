@@ -31,7 +31,7 @@ object Tester {
     assert(List.doubleToString(List(1, 2, 3, 4, 5)) == Cons("1", Cons("2", Cons("3", Cons("4", Cons("5", Nil))))))
     assert(List.map(List(1, 2, 3))((x) => x * x) == Cons(1, Cons(4, Cons(9, Nil))))
     assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(2, Cons(4, Cons(6, Nil))))
-
+    assert(List.flatMap(List(1, 2, 3, 4))(i => List(i, i)) == Cons(1, Cons(1, Cons(2, Cons(2, Cons(3, Cons(3, Cons(4, Cons(4, Nil)))))))))
   }
 }
 
@@ -275,7 +275,7 @@ object List {
   def map[A, B](as: List[A])(f: A => B): List[B] = foldRight(as, List[B]())((x, y) => Cons(f(x), y))
 
   /*
-  Exercise 3.19
+  Exercise 3.19"
 
   Write a function filter that removes elements from a list unless they satisfy a given predicate.
   Use it to remove all odd numbers from a List[Int].
@@ -289,7 +289,7 @@ object List {
         case false => Cons(x, y)
       }
     })
-  
+
   /*
   Exercise 3.20
 
@@ -301,6 +301,11 @@ object List {
 
   For instance, flatMap(List(1,2,3))(i => List(i,i)) should result in List(1,1,2,2,3,3).
   */
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
+    foldRight(as, List[B]())((x, y) => {
+      appendRight(f(x), y)
+    })
+  }
 
   /*
   Exercise 3.21
