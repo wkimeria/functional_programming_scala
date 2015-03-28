@@ -26,7 +26,7 @@ object Tester {
     assert(List.productLeft(List(1, 2, 3, 4)) == 24)
     assert(List.lengthLeft(List(6, 2, 8, 4, 5, 33, 128, -200)) == 8)
     assert(List.reverse(List(2, 4, 6, 8)) == Cons(8, Cons(6, Cons(4, Cons(2, Nil)))))
-    assert(List.appendRight(List(1, 2, 3), List(4, 5)) == Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))))
+    assert(List.append(List(1, 2, 3), List(4, 5)) == Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Nil))))))
     assert(List.addOne(List(2, 4, 6, 8)) == Cons(3, Cons(5, Cons(7, Cons(9, Nil)))))
     assert(List.doubleToString(List(1, 2, 3, 4, 5)) == Cons("1", Cons("2", Cons("3", Cons("4", Cons("5", Nil))))))
     assert(List.map(List(1, 2, 3))((x) => x * x) == Cons(1, Cons(4, Cons(9, Nil))))
@@ -236,7 +236,7 @@ object List {
 
   Implement append in terms of either foldLeft or foldRight.
   */
-  def appendRight[A](ns1: List[A], ns2: List[A]): List[A] = foldRight(ns1, ns2)((lst2, lst1) => Cons(lst2, lst1))
+  def append[A](ns1: List[A], ns2: List[A]): List[A] = foldRight(ns1, ns2)((lst2, lst1) => Cons(lst2, lst1))
 
   /*
   Exercise 3.15
@@ -303,7 +303,7 @@ object List {
   */
   def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
     foldRight(as, List[B]())((x, y) => {
-      appendRight(f(x), y)
+      append(f(x), y)
     })
   }
 
