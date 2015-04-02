@@ -30,8 +30,9 @@ object Tester {
     assert(List.addOne(List(2, 4, 6, 8)) == Cons(3, Cons(5, Cons(7, Cons(9, Nil)))))
     assert(List.doubleToString(List(1, 2, 3, 4, 5)) == Cons("1", Cons("2", Cons("3", Cons("4", Cons("5", Nil))))))
     assert(List.map(List(1, 2, 3))((x) => x * x) == Cons(1, Cons(4, Cons(9, Nil))))
-    assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(2, Cons(4, Cons(6, Nil))))
+    assert(List.filterOld(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(2, Cons(4, Cons(6, Nil))))
     assert(List.flatMap(List(1, 2, 3, 4))(i => List(i, i)) == Cons(1, Cons(1, Cons(2, Cons(2, Cons(3, Cons(3, Cons(4, Cons(4, Nil)))))))))
+    assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(1, Cons(3, Cons(5, Nil))))
   }
 }
 
@@ -282,7 +283,7 @@ object List {
 
   def filter[A](as: List[A])(f: A => Boolean): List[A]
   */
-  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+  def filterOld[A](as: List[A])(f: A => Boolean): List[A] =
     foldRight(as, List[A]())((x, y) => {
       f(x) match {
         case true => y
@@ -301,17 +302,19 @@ object List {
 
   For instance, flatMap(List(1,2,3))(i => List(i,i)) should result in List(1,1,2,2,3,3).
   */
-  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
-    foldRight(as, List[B]())((x, y) => {
-      append(f(x), y)
-    })
-  }
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = foldRight(as, List[B]())((x, y) => append(f(x), y))
 
   /*
   Exercise 3.21
 
   Use flatMap to implement filter.
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
   */
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    flatMap(as)((i) => f(i) match {
+      case true => Cons(i, Nil)
+      case false => Nil
+    })
 
   /*
   Exercise 3.22
