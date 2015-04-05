@@ -33,6 +33,7 @@ object Tester {
     assert(List.filterOld(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(2, Cons(4, Cons(6, Nil))))
     assert(List.flatMap(List(1, 2, 3, 4))(i => List(i, i)) == Cons(1, Cons(1, Cons(2, Cons(2, Cons(3, Cons(3, Cons(4, Cons(4, Nil)))))))))
     assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(1, Cons(3, Cons(5, Nil))))
+    assert(List.combine(List(1, 2, 3), List(4, 5, 6)) == Cons(1, Cons(4, Cons(2, Cons(5, Cons(3, Cons(6, Nil)))))))
   }
 }
 
@@ -322,6 +323,18 @@ object List {
   Write a function that accepts two lists and constructs a new list by adding corresponding elements. For example,
   List(1,2,3) and List(4,5,6) become List(5,7,9).
   */
+  //TODO: Looked at book answer, the better way to do this is to match on both a and b in one match statement
+  def combine(a: List[Int], b: List[Int]): List[Int] = {
+    a match {
+      case Cons(x, y) => {
+        b match {
+          case Cons(x1, y1) => append(List(x, x1), combine(y, y1))
+          case Nil => Nil
+        }
+      }
+      case Nil => Nil
+    }
+  }
 
   /*
   Exercise 3.23
