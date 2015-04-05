@@ -33,7 +33,8 @@ object Tester {
     assert(List.filterOld(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(2, Cons(4, Cons(6, Nil))))
     assert(List.flatMap(List(1, 2, 3, 4))(i => List(i, i)) == Cons(1, Cons(1, Cons(2, Cons(2, Cons(3, Cons(3, Cons(4, Cons(4, Nil)))))))))
     assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(1, Cons(3, Cons(5, Nil))))
-    assert(List.combine(List(1, 2, 3), List(4, 5, 6)) == Cons(1, Cons(4, Cons(2, Cons(5, Cons(3, Cons(6, Nil)))))))
+    assert(List.combine(List(1, 2, 3), List(4, 5, 6)) == Cons(5, Cons(7, Cons(9, Nil))))
+    assert(List.zipWith(List(1.0, 2.0, 3.0), List(4.0, 5.0, 6.0))((a, b) => (a + b)) == Cons(5.0, Cons(7.0, Cons(9.0, Nil))))
   }
 }
 
@@ -328,7 +329,7 @@ object List {
     a match {
       case Cons(x, y) => {
         b match {
-          case Cons(x1, y1) => append(List(x, x1), combine(y, y1))
+          case Cons(x1, y1) => Cons(x + x1, combine(y, y1))
           case Nil => Nil
         }
       }
@@ -342,6 +343,11 @@ object List {
   Generalize the function you just wrote so that it’s not specific to integers or addition.
   Name your generalized function zipWith.
   */
+  def zipWith[A, B, C](a: List[A], b: List[B])(f: (A, B) => C): List[C] = (a, b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+  }
 
   /*
   Exercise 3.24
