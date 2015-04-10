@@ -6,7 +6,6 @@ trait Option[+A] {
 
   /*
   * Exercise 4.1
-  * TODO: Implement everything but Map and FlatMap without using pattern matching
   * It’s fine to use pattern matching, though you should be able to implement all the functions besides map and
   * getOrElse without resorting to pattern matching.
   *
@@ -40,6 +39,7 @@ trait Option[+A] {
   }
 }
 
+
 case class Some[+A](get: A) extends Option[A]
 
 case object None extends Option[Nothing]
@@ -55,6 +55,23 @@ object Tester {
     assert(Some(33).orElse(Some(-100)) == Some(33))
     assert(Some(4).filter((x) => (x % 2 == 0)) == Some(4))
     assert(Some(5).filter((x) => (x % 2 == 0)) == None)
+    assert(variance(List(2.0, 4.0, 6.0)) == Some(2.6666666666666665))
+    println(variance(List(2.0, 4.0, 6.0)))
 
+  }
+
+ /*
+ * Exercise 4.2
+ * Implement the variance function in terms of flatMap.
+ * If the mean of a sequence is m, the variance is the mean of math.pow(x - m, 2) for each element x in the sequence.
+ * See the definition of variance on Wikipedia (http://mng.bz/0Qsr).
+ *
+ * def variance(xs: Seq[Double]): Option[Double]
+ */
+  def variance(xs: Seq[Double]): Option[Double] = {
+    //TODO: Review this
+    //mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
+    def mean(x: Seq[Double]): Double = x.sum / x.length
+    Some(xs.flatMap((v) => List(math.pow((v - mean(xs)), 2))).sum / xs.length)
   }
 }
