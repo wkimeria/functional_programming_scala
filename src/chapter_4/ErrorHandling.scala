@@ -56,22 +56,51 @@ object Tester {
     assert(Some(4).filter((x) => (x % 2 == 0)) == Some(4))
     assert(Some(5).filter((x) => (x % 2 == 0)) == None)
     assert(variance(List(2.0, 4.0, 6.0)) == Some(2.6666666666666665))
-    println(variance(List(2.0, 4.0, 6.0)))
+    assert(variance2(List(2.0, 4.0, 6.0)) == Some(2.6666666666666665))
+    assert(map2(Some(1), Some(4))((a, b) => a + b) == Some(5))
+    //TODO: Why does the below not compile?
+    //assert(map2(None, Some(4))((a, b) => a + b) == None)
+    //assert(map2(None, None)((a, b) => a + b) == None)
+    assert(map2(Some(1), None)((a, b) => a + b) == None)
 
   }
 
- /*
- * Exercise 4.2
- * Implement the variance function in terms of flatMap.
- * If the mean of a sequence is m, the variance is the mean of math.pow(x - m, 2) for each element x in the sequence.
- * See the definition of variance on Wikipedia (http://mng.bz/0Qsr).
- *
- * def variance(xs: Seq[Double]): Option[Double]
- */
+  def variance2(xs: Seq[Double]): Option[Double] = {
+    def mean(x: Seq[Double]): Seq[Double] = {
+      List(x.sum / x.length)
+      //x.map((v) => x.sum / x.length)
+    }
+    val r = mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
+    Some(r(0))
+  }
+
+  /*
+  * Exercise 4.2
+  * Implement the variance function in terms of flatMap.
+  * If the mean of a sequence is m, the variance is the mean of math.pow(x - m, 2) for each element x in the sequence.
+  * See the definition of variance on Wikipedia (http://mng.bz/0Qsr).
+  *
+  * def variance(xs: Seq[Double]): Option[Double]
+  */
   def variance(xs: Seq[Double]): Option[Double] = {
     //TODO: Review this
     //mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
     def mean(x: Seq[Double]): Double = x.sum / x.length
     Some(xs.flatMap((v) => List(math.pow((v - mean(xs)), 2))).sum / xs.length)
   }
+
+  /*
+  Exercise 4.3
+  Write a generic function map2 that combines two Option values using a binary function.
+  If either Option value is None, then the return value is too.
+    Here is its signature:
+
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C]
+  */
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =(a, b) match {
+      case (Some(v), Some(y)) => Some(f(v, y))
+      case (_, None) => None
+      case (None, _) => None
+      case (None, None) => None
+    }
 }
