@@ -35,6 +35,12 @@ object Tester {
     assert(List.filter(List(1, 2, 3, 4, 5, 6))((x) => (x % 2) != 0) == Cons(1, Cons(3, Cons(5, Nil))))
     assert(List.combine(List(1, 2, 3), List(4, 5, 6)) == Cons(5, Cons(7, Cons(9, Nil))))
     assert(List.zipWith(List(1.0, 2.0, 3.0), List(4.0, 5.0, 6.0))((a, b) => (a + b)) == Cons(5.0, Cons(7.0, Cons(9.0, Nil))))
+    assert(List.productRightExitOnZero(List(1.0, 2.0, 3.0, 4.0)) == 24.0)
+    assert(List.hasSubsequence(List(1, 2, 3, 4), List(1, 2)) == true)
+    assert(List.hasSubsequence(List(1, 2, 3, 4), List(2, 3, 4)) == true)
+    assert(List.hasSubsequence(List(1, 2, 3, 1, 2, 3, 4), List(1, 2, 3, 4)) == true)
+    assert(List.hasSubsequence(List(1, 2, 3, 4), List(5, 6)) == false)
+    assert(List.hasSubsequence(List(1, 2, 3, 4, 5), List(1, 4, 5)) == false)
   }
 }
 
@@ -165,6 +171,10 @@ object List {
   This is a deeper question that we’ll return to in chapter 5.
    */
   //TODO:Write code here
+  //TODO: Why can't this be type invariant
+  def productRightExitOnZero(ns: List[Double]) =
+    foldRight(ns, 1.0)(_ * _)
+
 
   /*
   Exercise 3.8 (No code, just reasoning through the problem)
@@ -361,6 +371,27 @@ object List {
 
   def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean
   */
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    def loop[A](sup1: List[A], sub1: List[A], i: Int): Int = {
+      if (i == length(sub))
+        i
+      else
+        sup1 match {
+          case Cons(h, t) => sub1 match {
+            case Cons(h1, t1) => if (h == h1)
+              if (t1 == Nil)
+                1
+              else
+                loop(t, t1, i + 1)
+            else
+              loop(t, sub, 1)
+            case Nil => i
+          }
+          case Nil => i
+        }
+    }
+    loop(sup, sub, 1) == length(sub)
+  }
 
   /*
   Exercise 3.25
