@@ -41,6 +41,35 @@ object Tester {
     assert(List.hasSubsequence(List(1, 2, 3, 1, 2, 3, 4), List(1, 2, 3, 4)) == true)
     assert(List.hasSubsequence(List(1, 2, 3, 4), List(5, 6)) == false)
     assert(List.hasSubsequence(List(1, 2, 3, 4, 5), List(1, 4, 5)) == false)
+    assert(Tree.treeSize(Branch(Leaf(1), Leaf(2))) == 3)
+    assert(Tree.treeSize(Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(1), Leaf(Nil)))) == 7)
+
+    val l1 = Branch(Leaf(1), Leaf(4))
+    val l2 = Branch(Leaf(55), Leaf(9))
+    val l3 = Branch(l1, l2)
+    val l4 = Branch(Leaf(101), Leaf(7))
+    val l5 = Branch(Leaf(19), Leaf(-9))
+    val l6 = Branch(l1, l2)
+    val l7 = Branch(l4, l5)
+    val l8 = Branch(l3, l7)
+
+    assert(Tree.maximum(l8) == 101)
+
+    val left1 = Leaf(1)
+    val right1 = Leaf(2)
+    val branch1 = Branch(left1, right1)
+
+    val left2 = Leaf(3)
+    val right2 = Leaf(4)
+    val branch2 = Branch(left2, right2)
+
+    val branch3 = Branch(branch1, branch2)
+
+    val branch4 = Branch(branch3, Leaf(22))
+
+
+    assert(Tree.depth(branch4) == 4)
+
   }
 }
 
@@ -392,13 +421,30 @@ object List {
     }
     loop(sup, sub, 1) == length(sub)
   }
+}
 
+
+sealed trait Tree[+A]
+
+case class Leaf[A](value: A) extends Tree[A]
+
+case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+object Tree {
   /*
   Exercise 3.25
 
   Write a function size that counts the number of nodes (leaves and branches) in a tree.
 
   */
+  def treeSize[A](t: Tree[A]): Int = {
+    def loop[A](t1: Tree[A], i: Int): Int =
+      t1 match {
+        case Leaf(v) => i + 1
+        case Branch(left, right) => loop(left, i) + loop(right, i) + 1
+      }
+    loop(t, 0)
+  }
 
   /*
   Exercise 3.26
@@ -406,12 +452,52 @@ object List {
   Write a function maximum that returns the maximum element in a Tree[Int].
   (Note: In Scala, you can use x.max(y) or x max y to compute the maximum of two integers x and y.)
   */
+  //TODO: Make this type generic
+  def maximum(t: Tree[Int]): Int = {
+    def loop(t1: Tree[Int], max: Int): Int = {
+      t1 match {
+        case Leaf(v: Int) => {
+          if (v > max) {
+            v
+          } else {
+            max
+          }
+        }
+        case Branch(left, right) =>
+          val lv = loop(left, max)
+          val rv = loop(right, max)
+          if (lv > rv)
+            lv
+          else
+            rv
+      }
+    }
+    loop(t, -100)
+  }
 
   /*
   Exercise 3.27
 
   Write a function depth that returns the maximum path length from the root of a tree to any leaf.
   */
+  def depth[A](t: Tree[A]): Int = {
+    def loop[A](t1: Tree[A], currMax: Int, currDepth: Int): Int = {
+      t1 match {
+        case Leaf(v: Int) =>
+          if ((currDepth + 1 < currMax)) {
+            currMax
+          } else {
+            currDepth + 1
+          }
+        case Branch(left, right) =>
+          val lDepth = loop(left, currMax, currDepth + 1)
+          val rDepth = loop(right, currMax, currDepth + 1)
+          if (lDepth > rDepth) lDepth else rDepth
+
+      }
+    }
+    loop(t, 0, 0)
+  }
 
   /*
   Exercise 3.28
@@ -429,3 +515,10 @@ object List {
 
 
 }
+
+
+
+
+
+
+
