@@ -67,8 +67,15 @@ object Tester {
 
     val branch4 = Branch(branch3, Leaf(22))
 
-
     assert(Tree.depth(branch4) == 4)
+
+    val left3 = Leaf(3)
+    val right3 = Leaf(4)
+    val right3a = Branch(Leaf(7), Leaf(11))
+    val branch5 = Branch(left3, right3)
+    val branch6 = Branch(right3a, branch5)
+    assert(branch6 == Branch(Branch(Leaf(7), Leaf(11)), Branch(Leaf(3), Leaf(4))))
+    assert(Tree.map(branch6, ((x: Int) => x * x)) == Branch(Branch(Leaf(49), Leaf(121)), Branch(Leaf(9), Leaf(16))))
 
   }
 }
@@ -504,6 +511,12 @@ object Tree {
 
   Write a function map, analogous to the method of the same name on List, that modifies each element in a tree with a given function.
   */
+  def map[A](t: Tree[A], f: (A => A)): Tree[A] = {
+    t match {
+      case Leaf(v) => Leaf(f(v))
+      case Branch(left, right) => Branch(map(left, f), map(right, f))
+    }
+  }
 
   /*
   Exercise 3.29
