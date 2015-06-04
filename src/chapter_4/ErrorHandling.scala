@@ -47,6 +47,7 @@ case object None extends Option[Nothing]
 
 object Tester {
   def main(args: Array[String]): Unit = {
+    println("Running Tests for Chapter 4 ....")
     assert(Some(1).map((v) => v * 30) == Some(30))
     assert(Some(1).flatMap((v) => Some(v * 30)) == Some(30))
     assert(None.getOrElse(-100) == -100)
