@@ -41,8 +41,13 @@ object Tester {
     assert(List.hasSubsequence(List(1, 2, 3, 1, 2, 3, 4), List(1, 2, 3, 4)) == true)
     assert(List.hasSubsequence(List(1, 2, 3, 4), List(5, 6)) == false)
     assert(List.hasSubsequence(List(1, 2, 3, 4, 5), List(1, 4, 5)) == false)
+
+    assert(Tree.treeSizeOld(Branch(Leaf(1), Leaf(2))) == 3)
+    assert(Tree.treeSizeOld(Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(1), Leaf(Nil)))) == 7)
+
     assert(Tree.treeSize(Branch(Leaf(1), Leaf(2))) == 3)
     assert(Tree.treeSize(Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(1), Leaf(Nil)))) == 7)
+
 
     val l1 = Branch(Leaf(1), Leaf(4))
     val l2 = Branch(Leaf(55), Leaf(9))
@@ -52,6 +57,8 @@ object Tester {
     val l6 = Branch(l1, l2)
     val l7 = Branch(l4, l5)
     val l8 = Branch(l3, l7)
+
+    assert(Tree.maximumOld(l8) == 101)
 
     assert(Tree.maximum(l8) == 101)
 
@@ -67,6 +74,8 @@ object Tester {
 
     val branch4 = Branch(branch3, Leaf(22))
 
+    assert(Tree.depthOld(branch4) == 4)
+    println(Tree.depth(branch4))
     assert(Tree.depth(branch4) == 4)
 
     val left3 = Leaf(3)
@@ -75,6 +84,7 @@ object Tester {
     val branch5 = Branch(left3, right3)
     val branch6 = Branch(right3a, branch5)
     assert(branch6 == Branch(Branch(Leaf(7), Leaf(11)), Branch(Leaf(3), Leaf(4))))
+    assert(Tree.mapOld(branch6, ((x: Int) => x * x)) == Branch(Branch(Leaf(49), Leaf(121)), Branch(Leaf(9), Leaf(16))))
     assert(Tree.map(branch6, ((x: Int) => x * x)) == Branch(Branch(Leaf(49), Leaf(121)), Branch(Leaf(9), Leaf(16))))
 
   }
@@ -444,7 +454,7 @@ object Tree {
   Write a function size that counts the number of nodes (leaves and branches) in a tree.
 
   */
-  def treeSize[A](t: Tree[A]): Int = {
+  def treeSizeOld[A](t: Tree[A]): Int = {
     def loop[A](t1: Tree[A], i: Int): Int =
       t1 match {
         case Leaf(v) => i + 1
@@ -460,7 +470,7 @@ object Tree {
   (Note: In Scala, you can use x.max(y) or x max y to compute the maximum of two integers x and y.)
   */
   //TODO: Make this type generic
-  def maximum(t: Tree[Int]): Int = {
+  def maximumOld(t: Tree[Int]): Int = {
     def loop(t1: Tree[Int], max: Int): Int = {
       t1 match {
         case Leaf(v: Int) => {
@@ -487,7 +497,7 @@ object Tree {
 
   Write a function depth that returns the maximum path length from the root of a tree to any leaf.
   */
-  def depth[A](t: Tree[A]): Int = {
+  def depthOld[A](t: Tree[A]): Int = {
     def loop[A](t1: Tree[A], currMax: Int, currDepth: Int): Int = {
       t1 match {
         case Leaf(v: Int) =>
@@ -511,7 +521,7 @@ object Tree {
 
   Write a function map, analogous to the method of the same name on List, that modifies each element in a tree with a given function.
   */
-  def map[A](t: Tree[A], f: (A => A)): Tree[A] = {
+  def mapOld[A](t: Tree[A], f: (A => A)): Tree[A] = {
     t match {
       case Leaf(v) => Leaf(f(v))
       case Branch(left, right) => Branch(map(left, f), map(right, f))
@@ -525,6 +535,32 @@ object Tree {
   Reimplement them in terms of this more general function.
   Can you draw an analogy between this fold function and the left and right folds for List?
   */
+  def fold[A](t: Tree[A])( f: ((A, Int) => Int ), f2: ((Int) => Int ), init: Int): Int = {
+    t match {
+      case Leaf(v) => f(v,init)
+      case Branch(left, right) => fold(right)(f, f2, fold(left)(f, f2, f2(init)))
+    }
+  }
+
+  def treeSize[A](t: Tree[A]): Int = {
+    fold(t)((x: A,y: Int) => y + 1, (v: Int) => v + 1, 0)
+  }
+
+  def maximum(t: Tree[Int]): Int = {
+    fold(t)((x: Int,y: Int) => if( y > x){y} else x, (v: Int) => v, 0)
+  }
+
+  def depth[A](t: Tree[A]): Int = {
+    fold(t)((x: A,y: Int) => y, (v: Int) => v + 1, 0)
+  }
+
+  //TODO:
+  def mapOld[A](t: Tree[A], f: (A => A)): Tree[A] = {
+    t match {
+      case Leaf(v) => Leaf(f(v))
+      case Branch(left, right) => Branch(map(left, f), map(right, f))
+    }
+  }
 
 
 }
