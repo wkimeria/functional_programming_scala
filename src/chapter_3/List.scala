@@ -555,6 +555,7 @@ object Tree {
   }
 
   //TODO:
+
   def map[A](t: Tree[A], f: (A => A)): Tree[A] = {
     t match {
       case Leaf(v) => Leaf(f(v))
