@@ -44,10 +44,46 @@ case class Some[+A](get: A) extends Option[A]
 
 case object None extends Option[Nothing]
 
+object Option {
+  /*
+  Exercise 4.4
+
+  Write a function sequence that combines a list of Options into one Option containing a list of all the
+  Some values in the original list.
+  If the original list contains None even once, the result of the function should be None;
+  otherwise the result should be Some with a list of all the values.
+  Here is its signature:[3] 3
+
+  This is a clear instance where it’s not appropriate to define the function in the OO style.
+  This shouldn’t be a method on List (which shouldn’t need to know anything about Option), and it can’t be a method on
+  Option, so it goes in the Option companion object.
+
+  def sequence[A](a: List[Option[A]]): Option[List[A]]
+   */
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = {
+    def loop(b: List[Option[A]], acc: List[A]):List[A] = {
+      b match {
+        case x::t => x match {
+          case Some(v) =>  loop(t,acc :+ v)
+          case None => List()
+        }
+        case _ => acc
+      }
+    }
+    val x = loop(a, List())
+    x match {
+      case h::t => Some(x)
+      case _ => None
+    }
+  }
+}
+
 
 object Tester {
   def main(args: Array[String]): Unit = {
+
     println("Running Tests for Chapter 4 ....")
+
     assert(Some(1).map((v) => v * 30) == Some(30))
     assert(Some(1).flatMap((v) => Some(v * 30)) == Some(30))
     assert(None.getOrElse(-100) == -100)
@@ -63,6 +99,9 @@ object Tester {
     //assert(map2(None, Some(4))((a, b) => a + b) == None)
     //assert(map2(None, None)((a, b) => a + b) == None)
     assert(map2(Some(1), None)((a, b) => a + b) == None)
+
+    assert(Option.sequence(List(Some(1),Some(2),Some(3))) == Some(List(1,2,3)))
+    assert(Option.sequence(List(Some(1),None,Some(3))) == None)
 
   }
 
@@ -98,10 +137,10 @@ object Tester {
 
   def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C]
   */
-  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =(a, b) match {
-      case (Some(v), Some(y)) => Some(f(v, y))
-      case (_, None) => None
-      case (None, _) => None
-      case (None, None) => None
-    }
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = (a, b) match {
+    case (Some(v), Some(y)) => Some(f(v, y))
+    case (_, None) => None
+    case (None, _) => None
+    case (None, None) => None
+  }
 }
